@@ -5,6 +5,25 @@ import Loading from './Loading';
 
 function App() {
 
+const download = ()=>{
+
+const downloadImage = (url) => {
+  const xhr = new XMLHttpRequest();
+  xhr.responseType = 'blob';
+  xhr.onload = () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(xhr.response);
+    a.download = 'image.jpg';
+    a.click();
+  };
+  xhr.open('GET', url);
+  xhr.send();
+};
+
+downloadImage(link);
+}
+
+
   const [photo, setPhoto] = useState("")
   const [link, setLink] = useState("")
   const [loading,setLoading] = useState(false)
@@ -12,7 +31,9 @@ function App() {
   const fetchdata = async (name) => {
       setLoading(true)
 
-    await fetch(`https://source.unsplash.com/700x400?${name}`)
+      const height = Math.floor(Math.random()*400)+400;
+      const width = Math.floor(Math.random()*400)+400;
+    await fetch(`https://source.unsplash.com/${height}x${width}?${name}`)
       .then((data) => {
         setLink(data.url)
         setLoading(false)
@@ -66,10 +87,13 @@ function App() {
           <>
             <center><img src={link} alt="logo" onClick={() => window.open(link)} /></center><br />
 
-            <center> <button onClick={() => fetchdata(photo)} className="bg-blue-500 hover:bg-blue-400 text-white font-bold px-1 py-1 rounded focus:outline-none focus:shadow-outline" type="button">
+            <center> <button onClick={() => fetchdata(photo)} className=" mr-2 bg-blue-500 hover:bg-blue-400 text-white font-bold px-1 py-1 rounded focus:outline-none focus:shadow-outline" type="button">
               Refresh Photo
+            </button> 
+           <button onClick={download} className=" ml-2 bg-blue-500 hover:bg-blue-400 text-white font-bold px-1 py-1 rounded focus:outline-none focus:shadow-outline" type="button">
+              Download
             </button> </center>
-
+            <br/>
           </>
 
           : null
